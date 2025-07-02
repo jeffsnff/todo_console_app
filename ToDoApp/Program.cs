@@ -33,6 +33,7 @@ namespace ToDoApp
 
       string toDoUpdate;
       Item toUpdate;
+      // Asks user what to do they want to update. 
       while (true)
       {
         toDoUpdate = UserChoice(toDoList, "Update");
@@ -51,22 +52,16 @@ namespace ToDoApp
         }
         break;
       }
-       
+
+      // Ask user what part of to do item to update
       string selectedOption = DisplayOptions(Enum.GetNames(typeof(SectionUpdate)));
       switch (selectedOption)
       {
         case "Title":
-          Console.WriteLine($"Updating: {toUpdate._title}");
-          Console.Write("New Title: ");
-          Console.CursorVisible = true;
-          toUpdate._title = Console.ReadLine();
+          toUpdate._title = UpdatingSection(toUpdate._title, toUpdate._title, "Title");
           break;
         case "Details":
-          Console.WriteLine($"Updateing {toUpdate._title} details");
-          Console.WriteLine($"Details:\n{toUpdate._details}");
-          Console.WriteLine("\nNew Details:");
-          Console.CursorVisible = true;
-          toUpdate._details = Console.ReadLine();
+          toUpdate._details = UpdatingSection(toUpdate._title, toUpdate._details, "Details");
           break;
         case "Date":
           Console.WriteLine($"Updating {toUpdate._dueDate}");
@@ -82,7 +77,7 @@ namespace ToDoApp
       Item itemToDelete;
       while (true)
       {
-        toDoDelete = UserChoice(toDoList, "Delete"); 
+        toDoDelete = UserChoice(toDoList, "Delete");
         if (toDoDelete.Equals(""))
         {
           break;
@@ -242,6 +237,15 @@ namespace ToDoApp
       Console.WriteLine("To Do List");
       Console.ResetColor();
       Console.WriteLine();
+    }
+
+    private static string UpdatingSection(string itemTitle, string itemOriginalInput, string sectionName)
+    {
+      Console.WriteLine($"Updating \u001b[34m{itemTitle}\u001b[0m {sectionName}");
+      Console.WriteLine($"Original {sectionName}: {itemOriginalInput}");
+      Console.Write($"New {sectionName}: ");
+      Console.CursorVisible = true;
+      return Console.ReadLine();
     }
   }
 }
