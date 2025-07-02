@@ -51,9 +51,8 @@ namespace ToDoApp
         }
         break;
       }
-
+       
       string selectedOption = DisplayOptions(Enum.GetNames(typeof(SectionUpdate)));
-
       switch (selectedOption)
       {
         case "Title":

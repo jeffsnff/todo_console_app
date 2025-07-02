@@ -17,7 +17,6 @@ namespace ToDoApp
     }
     public void Update(Guid itemID, Item updatedItem)
     {
-
       Remove(itemID);
       ToDoList.Add(updatedItem);
     }
@@ -56,10 +55,6 @@ namespace ToDoApp
     }
     public Item Find(string itemToFind)
     {
-
-      // Console.WriteLine(ToDoList.Where(item => item._title == itemToFind));
-      // Console.ReadKey();
-
       foreach (Item item in ToDoList)
       {
         if (item._title.Equals(itemToFind))
