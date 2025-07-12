@@ -9,88 +9,13 @@ namespace ToDoApp
   {
     static void Main(string[] args)
     {
-      List toDoList = new List();
+      List<Item> toDoList = new List<Item>();
       while (true)
       {
         RunCommand(Enum.GetNames(typeof(Action)), toDoList);
       }
     }
-    private static void CreateNewToDo(List toDoList)
-    {
-      Console.Clear();
-      ApplicationTitle();
-      Console.WriteLine();
-      string title = GetTitle();
-      string details = GetDetail();
-      DateTime dueDate = GetDate();
-
-      Item newItem = new Item(title, details, dueDate);
-      toDoList.Add(newItem);
-    }
-    private static void UpdateItem(List toDoList)
-    {
-      ApplicationTitle();
-
-      string toDoUpdate;
-      Item toUpdate;
-      // Asks user what to do they want to update. 
-      while (true)
-      {
-        toDoUpdate = UserChoice(toDoList, "Update");
-        if (toDoUpdate.Equals(""))
-        {
-          return;
-        }
-        toUpdate = toDoList.Find(toDoUpdate);
-
-        if (toUpdate == null)
-        {
-          Console.Clear();
-          Console.WriteLine("That To Do item does not exist.");
-          Console.ReadKey();
-          continue;
-        }
-        break;
-      }
-
-      // Ask user what part of to do item to update
-      string selectedOption = DisplayOptions(Enum.GetNames(typeof(SectionUpdate)));
-      switch (selectedOption)
-      {
-        case "Title":
-          toUpdate._title = UpdatingSection(toUpdate._title, toUpdate._title, "Title");
-          break;
-        case "Details":
-          toUpdate._details = UpdatingSection(toUpdate._title, toUpdate._details, "Details");
-          break;
-        case "Date":
-          Console.WriteLine($"Updating {toUpdate._dueDate}");
-          toUpdate._dueDate = GetDate();
-          break;
-        case "Exit":
-          break;
-      }
-    }
-    private static void DeleteToDo(List toDoList)
-    {
-      string toDoDelete;
-      Item itemToDelete;
-      while (true)
-      {
-        toDoDelete = UserChoice(toDoList, "Delete");
-        if (toDoDelete.Equals(""))
-        {
-          break;
-        }
-        if (toDoList.Delete(toDoDelete))
-        {
-          Console.WriteLine("Item has been deleted");
-          Console.ReadKey();
-          break;
-        }
-      }
-    }
-    private static void RunCommand(string[] options, List toDoList)
+    private static void RunCommand(string[] options, List<Item> toDoList)
     {
       while (true)
       {
@@ -98,37 +23,24 @@ namespace ToDoApp
         switch (selectedAction)
         {
           case "Add":
-            CreateNewToDo(toDoList);
+            ApplicationTitle();
+            Console.WriteLine("Add");
+            Console.ReadKey();
             break;
           case "Update":
             ApplicationTitle();
-            if (toDoList.Count() == 0)
-            {
-              Console.WriteLine("List is empty");
-              Console.ReadKey();
-              break;
-            }
-            UpdateItem(toDoList);
+            Console.WriteLine("Update");
+            Console.ReadKey();
             break;
           case "Delete":
             ApplicationTitle();
-            if (toDoList.Count() == 0)
-            {
-              Console.WriteLine("List is empty");
-              Console.ReadKey();
-              break;
-            }
-            DeleteToDo(toDoList);
+            Console.WriteLine("Delete");
+            Console.ReadKey();
             break;
           case "Read":
             ApplicationTitle();
-            if (toDoList.Count() == 0)
-            {
-              Console.WriteLine("List is empty");
-              Console.ReadKey();
-              break;
-            }
-            toDoList.Read();
+            Console.WriteLine("Read");
+            Console.ReadKey();
             break;
           case "End":
             Environment.Exit(0);
@@ -141,52 +53,13 @@ namespace ToDoApp
         }
       }
     }
-    private static string GetTitle()
-    {
-      Console.ForegroundColor = ConsoleColor.Blue;
-      Console.Write("To Do Title: ");
-      Console.ResetColor();
-      Console.CursorVisible = true;
-      return Console.ReadLine();
-    }
-    private static string GetDetail()
-    {
-      Console.ForegroundColor = ConsoleColor.Blue;
-      Console.Write("Give some details: ");
-      Console.ResetColor();
-      Console.CursorVisible = true;
-      return Console.ReadLine();
-    }
-    private static DateTime GetDate()
-    {
-      DateTime dueDate;
-      Console.ForegroundColor = ConsoleColor.Blue;
-      Console.WriteLine("Enter a due date following the YYYY MM DD format.");
-      Console.WriteLine("Press \u001b[32mEnter/Return\u001b[0m for tomorrows date.");
-      Console.ResetColor();
-      Console.ForegroundColor = ConsoleColor.Blue;
-      Console.Write("Due Date: ");
-      Console.ResetColor();
-      Console.CursorVisible = true;
-
-      if (DateTime.TryParse(Console.ReadLine(), out DateTime dateResult))
-      {
-        dueDate = dateResult;
-      }
-      else
-      {
-        TimeSpan duration = new TimeSpan(1, 0, 0, 0);
-        dueDate = DateTime.Now.Add(duration);
-      }
-      return dueDate;
-    }
     private static string DisplayOptions(string[] options)
     {
       ApplicationTitle();
       Console.WriteLine("Use ⬆️  and ⬇️  to navigate and press \u001b[32mEnter/Return\u001b[0m to select:");
       (int left, int top) = Console.GetCursorPosition();
       int selectedOption = 0;
-      string decorator = "✅ \u001b[32m";
+      string decorator = "✅  \u001b[32m";
       ConsoleKeyInfo key;
       bool isSelected = false;
 
@@ -216,19 +89,6 @@ namespace ToDoApp
       }
       return options[selectedOption];
     }
-
-    private static string UserChoice(List toDoList, string option)
-    {
-      Console.WriteLine($"What ToDo Item would you like to {option}?");
-      Console.WriteLine("Press \u001b[32mEnter/Return\u001b[0m to exit.");
-      Console.WriteLine();
-
-      toDoList.Read();
-      Console.Write($"{option}: ");
-      Console.CursorVisible = true;
-      return Console.ReadLine();
-    }
-
     private static void ApplicationTitle()
     {
       Console.Clear();
@@ -237,15 +97,6 @@ namespace ToDoApp
       Console.WriteLine("To Do List");
       Console.ResetColor();
       Console.WriteLine();
-    }
-
-    private static string UpdatingSection(string itemTitle, string itemOriginalInput, string sectionName)
-    {
-      Console.WriteLine($"Updating \u001b[34m{itemTitle}\u001b[0m {sectionName}");
-      Console.WriteLine($"Original {sectionName}: {itemOriginalInput}");
-      Console.Write($"New {sectionName}: ");
-      Console.CursorVisible = true;
-      return Console.ReadLine();
     }
   }
 }
